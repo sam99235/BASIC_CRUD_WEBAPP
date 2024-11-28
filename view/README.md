@@ -1,8 +1,8 @@
-#Requirments : 
-  > nodejs
-  > php
-  > mysql
-#How to run :
+# Requirments : 
+> nodejs
+> php
+> mysql
+# How to run :
 + front-end project :
   > open ` view ` folder
   > run the command ` npm run `
