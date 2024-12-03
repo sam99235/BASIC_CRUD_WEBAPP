@@ -7,9 +7,11 @@ export default function AdminPage() {
         <h2 className="text-xl font-semibold mb-4">EST SB</h2>
         <ul className="space-y-2">
           <li>
-            <button className="w-full text-left bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-              🧑‍🎓 | Manage Students
-            </button>
+            <Link to="student">
+              <button className="w-full text-left bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                🧑‍🎓 | Manage Students
+              </button>
+            </Link>
           </li>
           <li>
             <Link to="/admin/teacher">
@@ -29,8 +31,13 @@ export default function AdminPage() {
             </button>
           </li>
           <li>
+            <button className="w-full text-left bg-orange-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+              📑 | Manage Fields
+            </button>
+          </li>
+          <li>
             <button className="w-full text-left bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
-              📑 | Manage Fields & classes
+              📑 | Manage Classes
             </button>
           </li>
         </ul>
