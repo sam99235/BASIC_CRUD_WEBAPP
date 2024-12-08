@@ -1,29 +1,42 @@
 <?php
-function AdminLogin($email, $password) {
-    $sql = "SELECT * FROM admins WHERE email = ?";
+session_start();
+require_once "connection.php";
+
+function checkSession(){
+    if (isset($_SESSION['user_id'])) {
+        return true;
+    }
+}
+
+function checkLoginQuery($email, $password) {
+    $sql = "SELECT * FROM user WHERE email = ? AND type = 'Admin'";
     $stmn = EtablishConnection()->prepare($sql);
     $stmn->execute([$email]);
     $admin = $stmn->fetch(PDO::FETCH_ASSOC);
-
     if (!empty($admin)) {
-        if ($password == $admin['password']) {
-            return ['success' => true, 'admin' => $admin];
+        if ($password === $admin['passwordHash']) {
+            $_SESSION['user_id'] = $admin['userId'];
+            return ['result' => true, 'message' => 'Login successful'];
         } else {
-            return ['success' => false, 'error' => 'Invalid email or password'];
+            return ['result' => false, 'message' => 'Invalid password'];
         }
     } else {
-        return ['success' => false, 'error' => 'Invalid email or password'];
+        return ['result' => false, 'message' => 'User not found'];
     }
 }
 
 function DeleteTeacher($teacherID){
-    $sql = "DELETE FROM teachers WHERE teacherID = ?";
-    $stmn = EtablishConnection()->prepare($sql);
-    $stmn->execute([$teacherID]);
+    if(checkSession()==true){
+        $sql = "DELETE FROM teachers WHERE teacherID = ?";
+        $stmn = EtablishConnection()->prepare($sql);
+        $stmn->execute([$teacherID]);
+    }
 }
 function DeleteStudent($studentID){
-    $sql = "DELETE FROM teacher WHERE teacherID = ?";
-    $stmn = EtablishConnection()->prepare($sql);
-    $stmn->execute([$teacherID]);
+    if(checkSession()==true){
+        $sql = "DELETE FROM teacher WHERE teacherID = ?";
+        $stmn = EtablishConnection()->prepare($sql);
+        $stmn->execute([$teacherID]);
+    }
 }
 ?>

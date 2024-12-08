@@ -18,7 +18,7 @@ export default function TeachersManagement() {
   ];
   return (
     <>
-      <Link to="/admin/createAccount" state={{ defaultAccountType: "teacher" }}>
+      <Link to="/admin/accountsForm" state={{ defaultAccountType: "teacher" }}>
         <button className="bg-green-500 rounded-md p-2">Add new</button>
       </Link>
       <div className="overflow-x-auto bg-black p-4 rounded-lg shadow-lg">

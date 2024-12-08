@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import { useEffect } from "react";
 export default function StudentsManagement() {
   const teachers = [
     { id: 1, name: "John Doe", email: "john.doe@example.com", subject: "Math" },
@@ -18,7 +18,7 @@ export default function StudentsManagement() {
   ];
   return (
     <>
-      <Link to="/admin/createAccount" state={{ defaultAccountType: "student" }}>
+      <Link to="/admin/accountsForm" state={{ defaultAccountType: "student" }}>
         <button className="bg-green-500 rounded-md p-2">Add new</button>
       </Link>
       <div className="overflow-x-auto bg-black p-4 rounded-lg shadow-lg">

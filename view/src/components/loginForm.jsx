@@ -1,8 +1,32 @@
-import { Link } from "react-router-dom";
-
+import { useRef } from "react";
 export default function LoginForm() {
-  const handleSubmit = (e) => {
+  const email = useRef();
+  const password = useRef();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (email.current.value !== "" && password.current.value !== "") {
+      const response = await fetch(
+        "http://localhost:8000/controller/adminController.php?action=checkLogin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email: email.current.value,
+            password: password.current.value,
+          }),
+        }
+      );
+      const resp = await response.json();
+      if (resp.result === true) {
+        window.location.href = "/admin/";
+      } else {
+        alert(resp.message || "An error occurred. Please try again.");
+      }
+    }
   };
 
   return (
@@ -24,6 +48,7 @@ export default function LoginForm() {
               placeholder="Enter your email"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
               required
+              ref={email}
             />
           </div>
           <div className="mb-6">
@@ -38,16 +63,15 @@ export default function LoginForm() {
               placeholder="Enter your password"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
               required
+              ref={password}
             />
           </div>
-          <Link to="/admin">
-            <button
-              type="submit"
-              className="w-full bg-black text-white py-2 rounded-lg font-bold hover:bg-gray-800"
-            >
-              Login
-            </button>
-          </Link>
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-2 rounded-lg font-bold hover:bg-gray-800"
+          >
+            Login
+          </button>
         </form>
       </div>
     </div>
