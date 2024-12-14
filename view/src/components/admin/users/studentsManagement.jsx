@@ -1,24 +1,51 @@
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 export default function StudentsManagement() {
-  const teachers = [
-    { id: 1, name: "John Doe", email: "john.doe@example.com", subject: "Math" },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
-      subject: "Science",
-    },
-    {
-      id: 3,
-      name: "David Johnson",
-      email: "david.johnson@example.com",
-      subject: "English",
-    },
-  ];
+  const [students, setStudents] = useState([]);
+
+  const fetchStudents = async () => {
+    const request = await fetch(
+      `http://localhost:8000/controller/adminController.php?action=display_accounts`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          accountType: "Student",
+        }),
+      }
+    );
+    const response = await request.json();
+    setStudents(response);
+  };
+
+  const deleteTeacher = async (id) => {
+    const confirmed = window.confirm("Are you sure you want to delete ? ");
+    if (confirmed) {
+      const request = await fetch(
+        `http://localhost:8000/controller/adminController.php?action=delete_account`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            accountID: id,
+          }),
+        }
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetchStudents();
+  }, [students]);
   return (
     <>
-      <Link to="/admin/accountsForm" state={{ defaultAccountType: "student" }}>
+      <Link to="/admin/accountsForm" state={{ defaultAccount: "Student" }}>
         <button className="bg-green-500 rounded-md p-2">Add new</button>
       </Link>
       <div className="overflow-x-auto bg-black p-4 rounded-lg shadow-lg">
@@ -40,16 +67,19 @@ export default function StudentsManagement() {
             </tr>
           </thead>
           <tbody>
-            {teachers.map((teacher) => (
-              <tr key={teacher.id} className="hover:bg-gray-700">
-                <td className="px-6 py-3 text-center">{teacher.id}</td>
-                <td className="px-6 py-3 text-center">{teacher.name}</td>
-                <td className="px-6 py-3 text-center">{teacher.email}</td>
+            {students.map((item) => (
+              <tr key={item.userID} className="hover:bg-gray-700">
+                <td className="px-6 py-3 text-center">{item.userID}</td>
+                <td className="px-6 py-3 text-center">{item.name}</td>
+                <td className="px-6 py-3 text-center">{item.email}</td>
                 <td className="px-6 py-3 text-center">
                   <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded mr-2">
                     Modify
                   </button>
-                  <button className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded">
+                  <button
+                    onClick={() => deleteTeacher(item.userID)}
+                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded"
+                  >
                     Delete
                   </button>
                 </td>

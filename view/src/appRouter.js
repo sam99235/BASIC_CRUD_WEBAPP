@@ -7,7 +7,7 @@ import StudentsManagement from "./components/admin/users/studentsManagement";
 import AccountsForm from "./components/admin/users/accountsForm";
 import EventsFrom from "./components/admin/events/formEvent";
 import EventsManagement from "./components/admin/events/eventsManagement";
-
+import AdminAccount from "./components/admin/adminAccount";
 export default function AppRouter() {
   return (
     <>
@@ -21,6 +21,7 @@ export default function AppRouter() {
             <Route path="accountsForm" element={<AccountsForm />} />
             <Route path="events" element={<EventsManagement />} />
             <Route path="eventsForm" element={<EventsFrom />} />
+            <Route path="adminAccount" element={<AdminAccount />} />
           </Route>
           {/* <Route path="*" element={NotFound} /> */}
         </Routes>

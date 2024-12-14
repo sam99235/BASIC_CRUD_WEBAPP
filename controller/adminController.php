@@ -17,7 +17,27 @@ switch ($action) {
     case 'verifySession':
         verifySession();
         break;
-    case 'logout':
+    case 'updateAdminPassword':
+        updateAdminPassword();
+        break;
+    case 'create_account':
+        CreateAccount();
+        break;
+    case 'update_account':
+        UpdateAccount();
+        break;
+    case 'display_accounts':
+        DisplayAccounts();
+        break;
+    case 'delete_account':
+        DeleteAccount();
+        break;
+    case 'display_fields':
+        DisplaySubjects();
+        break;
+    case 'display_classes':
+        DisplayClasses();
+        break;
     default:
         echo json_encode(['error' => 'Invalid action']);
         break;
@@ -35,11 +55,71 @@ function CheckLogin() {
 
 
 function verifySession() {
-    if (checkSession()==false) {
-        echo json_encode(['result' => false]);
+    $response=checkSession();
+    echo json_encode($response);
+}
+
+
+function updateAdminPassword() {
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (!empty($input['newPassword']) && !empty($input['oldPassword'])) {
+        $response = updateAdminPasswordQuery($input['oldPassword'], $input['newPassword']);
+        echo json_encode($response);
+    } else {
+        echo json_encode(['done' => false,'message' => 'Invalid input']);
     }
-    else{
-        echo json_encode(['result' => $_SESSION['user_id']]);
+}
+
+function CreateAccount(){
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (!empty($input['name']) && !empty($input['email']) && !empty($input['password']) && !empty($input['accountType'])) {
+        $result = CreateAccountQuery(
+            $input['name'],
+            $input['email'],
+            $input['password'],
+            $input['accountType'],
+            $input['studentClass'],
+            $input['teacherSubject'],
+        );
+        echo json_encode($result);
     }
+}
+
+function DisplayAccounts(){
+    $input = json_decode(file_get_contents('php://input'), true);
+    $result= DisplayAccountsQuery($input['accountType']);
+    echo json_encode($result);
+}
+function UpdateAccount(){
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (!empty($input['userID']) &&!empty($input['name']) &&!empty($input['email']) &&!empty($input['password'])) {
+        $response=UpdateAccountQuery(
+            $input['userID'],
+            $input['name'],
+            $input['email'],
+            $input['password'],
+            $input['accountType'],
+            $input['studentClass'],
+            $input['teacherSubject'],
+        );
+        echo json_encode($response);
+    }
+}
+
+function DeleteAccount(){
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (!empty($input['accountID'])) {
+        DeleteAccountQuery($input['accountID']);
+    }
+}
+
+function DisplayClasses(){
+    $result=DisplayClassesQuery();
+    echo json_encode($result);
+}
+
+function DisplaySubjects(){
+    $result=DisplaySubjectsQuery();
+    echo json_encode($result);
 }
 ?>

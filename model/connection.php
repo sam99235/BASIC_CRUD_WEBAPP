@@ -1,7 +1,7 @@
 <?php
     function EtablishConnection(){
         try{
-            $connection=new PDO("mysql:host=localhost;dbname=estsb_cms","root","root");
+            $connection=new PDO("mysql:host=localhost;dbname=cms_estsb","root","root");
             return $connection;
         }
         catch(PDOException $e){

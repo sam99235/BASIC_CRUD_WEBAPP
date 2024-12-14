@@ -13,8 +13,6 @@ export default function AdminPage() {
       const resp = await response.json();
       if (resp.result === false) {
         window.location.href = "/login";
-      } else {
-        console.log(resp.result);
       }
     };
 
