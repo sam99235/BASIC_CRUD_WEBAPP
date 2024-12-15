@@ -38,6 +38,19 @@ switch ($action) {
     case 'display_classes':
         DisplayClasses();
         break;
+    case 'display_events':
+        DisplayEvents();
+        break;
+    case 'create_event':
+        CreateEvent();
+    case 'delete_event':
+        DeleteEvent();
+    case 'update_event':
+        UpdateEvent();
+        break;
+    // case 'update_event':
+
+
     default:
         echo json_encode(['error' => 'Invalid action']);
         break;
@@ -121,5 +134,46 @@ function DisplayClasses(){
 function DisplaySubjects(){
     $result=DisplaySubjectsQuery();
     echo json_encode($result);
+}
+
+function DisplayEvents(){
+    $result=DisplayEventsQuery();
+    echo json_encode($result);
+}
+
+function CreateEvent(){
+    $input = json_decode(file_get_contents('php://input'), true);
+    $imageData = base64_decode($input['image']);
+    if (!empty($input['title']) &&!empty($input['description']) &&!empty($input['date'])) {
+        $result=CreateEventQuery(
+            $input['title'],
+            $input['description'],
+            $input['date'],
+            $imageData,
+        );
+        echo json_encode($result);
+    }
+}
+
+function DeleteEvent(){
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (!empty($input['eventID'])) {
+        DeleteEventQuery($input['eventID']);
+    }
+}
+function UpdateEvent(){
+    $input = json_decode(file_get_contents('php://input'), true);
+    $imageData = base64_decode($input['image']);
+    $date=$input['date'];
+    if (!empty($input['eventID']) &&!empty($input['title']) &&!empty($input['description']) &&!empty($input['date'])) {
+        $result=UpdateEventQuery(
+            $input['title'],
+            $input['description'],
+            $input['date'],
+            $imageData,
+            $input['eventID'],
+        );
+        echo json_encode($result);
+    }
 }
 ?>

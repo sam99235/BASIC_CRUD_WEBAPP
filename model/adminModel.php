@@ -110,4 +110,48 @@ function DisplaySubjectsQuery(){
     return $stmn->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function DisplayEventsQuery(){
+    $sql = "SELECT * FROM events ORDER BY date";
+    $stmt = EtablishConnection()->prepare($sql);
+    $stmt->execute();
+    $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($events as &$event) {
+        if (!empty($event['eventImage'])) {
+            $event['eventImage'] = 'data:image/jpeg;base64,' . base64_encode($event['eventImage']); // Adjust MIME type if needed
+        }
+    }
+
+    return $events;
+}
+
+function CreateEventQuery($title,$description,$date,$image){
+    try {
+        $sql="INSERT INTO events (eventID, title, description, date, eventImage) values (null,?,?,?,?)";
+        $stmn = EtablishConnection()->prepare($sql);
+        $stmn->execute([$title,$description,$date,$image]);
+        return ['done' => true,'message'=> 'Event created successfully'];
+    }
+    catch(PDOException $e){
+        return ['done' => false,'message'=> $e->getMessage()];
+    }
+}
+
+function DeleteEventQuery($eventID){
+    $sql="DELETE FROM events WHERE eventID =?";
+    $stmn = EtablishConnection()->prepare($sql);
+    $stmn->execute([$eventID]);
+}
+
+function UpdateEventQuery($eventID,$title,$description,$date,$image){
+    try {
+        $sql="update events SET title = ?, description = ?, date = ?, eventImage =? WHERE eventID = ?";
+        $stmn = EtablishConnection()->prepare($sql);
+        $stmn->execute([$title,$description,$date,$image,$eventID]);
+        return ['done' => true,'message'=> 'Event updated successfully'];
+    }
+    catch(PDOException $e){
+        return ['done' => false,'message'=> $e->getMessage()];
+    }
+}
 ?>

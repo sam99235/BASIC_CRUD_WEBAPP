@@ -1,46 +1,102 @@
-import { useRef } from "react";
-
+import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import { useState } from "react";
 export default function EventsForm() {
+  const location = useLocation();
+  const event = location.state || "";
+  console.log("event id :  " + event.eventID);
+
   const nameRef = useRef();
   const dateRef = useRef();
   const descriptionRef = useRef();
+  const imageRef = useRef();
+
+  useEffect(() => {
+    if (event !== "") {
+      nameRef.current.value = event.title;
+      dateRef.current.value = event.date;
+      descriptionRef.current.value = event.description;
+      imageRef.current = event.image;
+    }
+  }, []);
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64String = reader.result
+        .replace("data:", "")
+        .replace(/^.+,/, "");
+      imageRef.current = base64String; // Store in useRef
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const createEvent = async () => {
+    const respone = await fetch(
+      "http://localhost:8000/controller/adminController.php?action=create_event",
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: nameRef.current.value,
+          date: dateRef.current.value,
+          description: descriptionRef.current.value,
+          image: imageRef.current,
+        }),
+      }
+    );
+    const result = await respone.json();
+    if (result.done === true) {
+      alert(result.message);
+      nameRef.current.value = "";
+      dateRef.current.value = "";
+      descriptionRef.current.value = "";
+      imageRef.current = null;
+    } else {
+      alert(result.message);
+    }
+  };
+  const updateEvent = async () => {
+    const respone = await fetch(
+      "http://localhost:8000/controller/adminController.php?action=update_event",
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          eventID: event.eventID,
+          title: nameRef.current.value,
+          date: dateRef.current.value,
+          description: descriptionRef.current.value,
+          image: imageRef.current,
+        }),
+      }
+    );
+    const result = await respone.json();
+    if (result.done === true) {
+      alert(result.message);
+      nameRef.current.value = "";
+      dateRef.current.value = "";
+      descriptionRef.current.value = "";
+      imageRef.current = null;
+    } else {
+      alert(result.message);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const eventData = {
-      name: nameRef.current.value,
-      date: dateRef.current.value,
-      description: descriptionRef.current.value,
-    };
-
-    try {
-      const response = await fetch(
-        "http://localhost:8000/controller/adminController",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(eventData),
-        }
-      );
-
-      if (response.ok) {
-        const result = await response.json();
-        alert("Event added successfully!");
-        console.log(result);
-        nameRef.current.value = "";
-        dateRef.current.value = "";
-        descriptionRef.current.value = "";
-      } else {
-        alert("Failed to add event. Please try again.");
-        console.error(await response.text());
-      }
-    } catch (error) {
-      console.error("Error submitting the form:", error);
-      alert("Something went wrong!");
+    console.log(dateRef.current.value);
+    if (event.eventID !== undefined) {
+      updateEvent();
+    } else {
+      createEvent();
     }
   };
 
@@ -75,6 +131,24 @@ export default function EventsForm() {
             name="event_date"
             ref={dateRef}
             className="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="event_date"
+            className="block text-sm font-medium mb-2"
+          >
+            Image
+          </label>
+          <input
+            type="file"
+            onChange={handleImageUpload}
+            ref={imageRef}
+            className="w-full p-3 bg-gray-700 text-white border
+             border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg file:rounded-md
+             file:border-0 file:text-gray-300 file:bg-gray-500
+             "
             required
           />
         </div>
