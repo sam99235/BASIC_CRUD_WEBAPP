@@ -143,7 +143,7 @@ function DeleteEventQuery($eventID){
     $stmn->execute([$eventID]);
 }
 
-function UpdateEventQuery($eventID,$title,$description,$date,$image){
+function UpdateEventQuery($title,$description,$date,$image,$eventID){
     try {
         $sql="update events SET title = ?, description = ?, date = ?, eventImage =? WHERE eventID = ?";
         $stmn = EtablishConnection()->prepare($sql);
