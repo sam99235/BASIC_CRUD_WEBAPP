@@ -67,17 +67,19 @@ export default function StudentsManagement() {
             </tr>
           </thead>
           <tbody>
-            {students.map((item) => (
-              <tr key={item.userID} className="hover:bg-gray-700">
-                <td className="px-6 py-3 text-center">{item.userID}</td>
-                <td className="px-6 py-3 text-center">{item.name}</td>
-                <td className="px-6 py-3 text-center">{item.email}</td>
+            {students.map((user) => (
+              <tr key={user.userID} className="hover:bg-gray-700">
+                <td className="px-6 py-3 text-center">{user.userID}</td>
+                <td className="px-6 py-3 text-center">{user.name}</td>
+                <td className="px-6 py-3 text-center">{user.email}</td>
                 <td className="px-6 py-3 text-center">
-                  <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded mr-2">
-                    Modify
-                  </button>
+                  <Link to="/admin/accountsForm" state={user}>
+                    <button className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded mr-2">
+                      Modify
+                    </button>
+                  </Link>
                   <button
-                    onClick={() => deleteTeacher(item.userID)}
+                    onClick={() => deleteTeacher(user.userID)}
                     className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded"
                   >
                     Delete

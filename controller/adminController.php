@@ -43,13 +43,31 @@ switch ($action) {
         break;
     case 'create_event':
         CreateEvent();
+        break;
     case 'delete_event':
         DeleteEvent();
+        break;
     case 'update_event':
         UpdateEvent();
         break;
-    // case 'update_event':
-
+    case 'fetchFields':
+        fetchFields();
+        break;
+    case 'deleteSubject':
+        deleteSubject();
+        break;
+    case 'updateSubject':
+        updateSubject();
+        break;
+    case 'createSubject':
+        createSubject();
+        break;
+    case 'fetchClasses':
+        fetchClasses();
+        break;
+    case 'deleteClass':
+        deleteClass();
+        break;
 
     default:
         echo json_encode(['error' => 'Invalid action']);
@@ -161,6 +179,7 @@ function DeleteEvent(){
         DeleteEventQuery($input['eventID']);
     }
 }
+
 function UpdateEvent(){
     $input = json_decode(file_get_contents('php://input'), true);
     $imageData = base64_decode($input['image']);
@@ -175,5 +194,33 @@ function UpdateEvent(){
         );
         echo json_encode($result);
     }
+}
+
+function fetchFields(){
+    $result=fetchFieldsQuery();
+    echo json_encode($result);
+}
+
+function deleteSubject(){
+    $input = json_decode(file_get_contents('php://input'), true);
+    $result=deleteSubjectQuery($input['subjectID']);
+    echo json_encode($result);
+}
+
+function updateSubject(){
+    $input = json_decode(file_get_contents('php://input'), true);
+    $result=UpdateSubjectQuery($input['subjectID'],$input['subjectName']);
+    echo json_encode($result);
+}
+
+function CreateSubject(){
+    $input = json_decode(file_get_contents('php://input'), true);
+    $result=CreateSubjectQuery($input['subjectName']);
+    echo json_encode($result);
+}
+
+function fetchClasses(){
+    $result=fetchClassesQuery();
+    echo json_encode($result);
 }
 ?>

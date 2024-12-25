@@ -8,6 +8,9 @@ import AccountsForm from "./components/admin/users/accountsForm";
 import EventsFrom from "./components/admin/events/formEvent";
 import EventsManagement from "./components/admin/events/eventsManagement";
 import AdminAccount from "./components/admin/adminAccount";
+import FieldsManagement from "./components/admin/fields_and_classes/fieldsManagement";
+import SubjectsForm from "./components/admin/fields_and_classes/formFields";
+import ClassesManagement from "./components/admin/fields_and_classes/classesManagement";
 export default function AppRouter() {
   return (
     <>
@@ -22,6 +25,9 @@ export default function AppRouter() {
             <Route path="events" element={<EventsManagement />} />
             <Route path="eventsForm" element={<EventsFrom />} />
             <Route path="adminAccount" element={<AdminAccount />} />
+            <Route path="fields" element={<FieldsManagement />} />
+            <Route path="subjectsForm" element={<SubjectsForm />} />
+            <Route path="classes" element={<ClassesManagement />} />
           </Route>
           {/* <Route path="*" element={NotFound} /> */}
         </Routes>

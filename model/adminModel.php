@@ -154,4 +154,66 @@ function UpdateEventQuery($title,$description,$date,$image,$eventID){
         return ['done' => false,'message'=> $e->getMessage()];
     }
 }
+
+function fetchFieldsQuery(){
+    $sql="SELECT * FROM subject";
+    $stmn = EtablishConnection()->prepare($sql);
+    $stmn->execute();
+    return $stmn->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function deleteSubjectQuery($id){
+    try{
+        $sql="DELETE FROM subject WHERE subjectID =?";
+        $stmn = EtablishConnection()->prepare($sql);
+        $stmn->execute([$id]);
+        return ['done' => true,'message'=> 'Subject deleted successfully'];
+    }
+    catch(PDOException $e){
+        return ['done' => false,'message'=> $e->getMessage()];
+    }
+}
+
+function CreateSubjectQuery($name){
+    try{
+        $sql="INSERT INTO subject (subjectID, subjectName) values (null, ?)";
+        $stmn = EtablishConnection()->prepare($sql);
+        $stmn->execute([$name]);
+        return ['done' => true,'message'=> 'Subject created successfully'];
+    }
+    catch(PDOException $e){
+        return ['done' => false,'message'=> $e->getMessage()];
+    }
+}
+
+function UpdateSubjectQuery($id, $name){
+    try{
+        $sql="UPDATE subject SET subjectName =? WHERE subjectID =?";
+        $stmn = EtablishConnection()->prepare($sql);
+        $stmn->execute([$name, $id]);
+        return ['done' => true,'message'=> 'Subject updated successfully'];
+    }
+    catch(PDOException $e){
+        return ['done' => false,'message'=> $e->getMessage()];
+    }
+}
+
+function fetchClassesQuery(){
+    $sql="SELECT * FROM class";
+    $stmn = EtablishConnection()->prepare($sql);
+    $stmn->execute();
+    return $stmn->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function deleteClassQuery($id){
+    try{
+        $sql="DELETE FROM class WHERE classID =?";
+        $stmn = EtablishConnection()->prepare($sql);
+        $stmn->execute([$id]);
+        return ['done' => true,'message'=> 'Class deleted successfully'];
+    }
+    catch(PDOException $e){
+        return ['done' => false,'message'=> $e->getMessage()];
+    }
+}
 ?>
